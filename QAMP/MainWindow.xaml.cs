@@ -23,6 +23,8 @@ namespace QAMP
         public MainWindow()
         {
             InitializeComponent();
+
+            Window_Main.Title = "QAMP " + typeof(MainWindow).Assembly.GetName().Version.ToString();
         }
     }
 }
