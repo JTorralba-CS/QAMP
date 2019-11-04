@@ -8,7 +8,7 @@ Quality Assurance Media Player.
 Windows 10 Professional LTSC\
 Visual Studio 2019 CE\
 C#\
-.NET Framework 4.5
+.NET Core 3.0
 
 ## Usage:
 

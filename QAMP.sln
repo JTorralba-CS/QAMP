@@ -3,7 +3,7 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 16
 VisualStudioVersion = 16.0.29424.173
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "QAMP", "QAMP\QAMP.csproj", "{7A594DDF-5E2D-4457-8252-8C5B1320F121}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "QAMP", "QAMP\QAMP.csproj", "{CD99E872-54AB-418A-A620-4BF5642233B2}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -11,10 +11,10 @@ Global
 		Release|Any CPU = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(ProjectConfigurationPlatforms) = postSolution
-		{7A594DDF-5E2D-4457-8252-8C5B1320F121}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{7A594DDF-5E2D-4457-8252-8C5B1320F121}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{7A594DDF-5E2D-4457-8252-8C5B1320F121}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{7A594DDF-5E2D-4457-8252-8C5B1320F121}.Release|Any CPU.Build.0 = Release|Any CPU
+		{CD99E872-54AB-418A-A620-4BF5642233B2}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{CD99E872-54AB-418A-A620-4BF5642233B2}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{CD99E872-54AB-418A-A620-4BF5642233B2}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{CD99E872-54AB-418A-A620-4BF5642233B2}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
