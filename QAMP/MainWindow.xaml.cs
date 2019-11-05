@@ -20,11 +20,38 @@ namespace QAMP
     /// </summary>
     public partial class MainWindow : Window
     {
+        private bool bool_Playing = false;
         public MainWindow()
         {
             InitializeComponent();
 
             Window_Main.Title = "QAMP " + typeof(MainWindow).Assembly.GetName().Version.ToString();
+        }
+
+        private void Handle_Button_Play_Click(object sender, RoutedEventArgs e)
+        {
+            if (!bool_Playing)
+            {
+                bool_Playing = true;
+                Image_Play.Source = new BitmapImage(new Uri("Image\\Pause.png", UriKind.RelativeOrAbsolute));
+
+                Window_Main.Title = "PLAYING";
+            }
+            else
+            {
+                bool_Playing = false;
+                Image_Play.Source = new BitmapImage(new Uri("Image\\Play.png", UriKind.RelativeOrAbsolute));
+
+                Window_Main.Title = "PAUSED";
+            }
+        }
+
+        private void Handle_Button_Stop_Click(object sender, RoutedEventArgs e)
+        {
+            bool_Playing = false;
+            Image_Play.Source = new BitmapImage(new Uri("Image\\Play.png", UriKind.RelativeOrAbsolute));
+
+            Window_Main.Title = "STOPPED";
         }
     }
 }

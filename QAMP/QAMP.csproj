@@ -9,12 +9,16 @@
 
   <ItemGroup>
     <None Remove="Image\Application.png" />
+    <None Remove="Image\Pause.png" />
+    <None Remove="Image\Play.png" />
+    <None Remove="Image\Stop.png" />
   </ItemGroup>
 
   <ItemGroup>
-    <Content Include="Image\Application.png">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </Content>
+    <Resource Include="Image\Application.png" />
+    <Resource Include="Image\Pause.png" />
+    <Resource Include="Image\Play.png" />
+    <Resource Include="Image\Stop.png" />
   </ItemGroup>
 
 </Project>

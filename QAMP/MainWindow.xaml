@@ -21,5 +21,14 @@
             <RowDefinition x:Name="RowDefinition_Slide" Height="Auto"/>
         </Grid.RowDefinitions>
 
+        <StackPanel Grid.Row="0" x:Name="StackPanel_Play" Orientation="Horizontal" Background="#FFDDDDDD">
+            <Button Name="Button_Play" BorderThickness="0,0,0,0" Click="Handle_Button_Play_Click">
+                <Image x:Name="Image_Play" Source="Image\Play.png" Stretch="None"/>
+            </Button>
+            <Button Name="Button_Stop" BorderThickness="0,0,0,0" Click="Handle_Button_Stop_Click">
+                <Image x:Name="Image_Stop" Source="Image\Stop.png" Stretch="None"/>
+            </Button>
+        </StackPanel>
+
     </Grid>
 </Window>
