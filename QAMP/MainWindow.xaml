@@ -13,7 +13,13 @@
         </LinearGradientBrush>
     </Window.Background>
 
-    <Grid>
+    <Grid x:Name="Grid_Main">
+
+        <Grid.RowDefinitions>
+            <RowDefinition x:Name="RowDefinition_Play" Height="Auto"/>
+            <RowDefinition x:Name="RowDefinition_Graph" Height="*"/>
+            <RowDefinition x:Name="RowDefinition_Slide" Height="Auto"/>
+        </Grid.RowDefinitions>
 
     </Grid>
 </Window>
