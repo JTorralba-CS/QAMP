@@ -13,6 +13,8 @@ using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
 
+using System.Windows.Controls.Primitives;
+
 namespace QAMP
 {
     /// <summary>
@@ -21,6 +23,8 @@ namespace QAMP
     public partial class MainWindow : Window
     {
         private bool bool_Playing = false;
+
+        private bool bool_Sliding = false;
         public MainWindow()
         {
             InitializeComponent();
@@ -52,6 +56,24 @@ namespace QAMP
             Image_Play.Source = new BitmapImage(new Uri("Image\\Play.png", UriKind.RelativeOrAbsolute));
 
             Window_Main.Title = "STOPPED";
+        }
+
+        private void Slider_Control_DragStarted(object sender, DragStartedEventArgs e)
+        {
+            bool_Sliding = true;
+
+            Window_Main.Title = "SLIDING STARTED";
+        }
+
+        private void Slider_Control_DragCompleted(object sender, DragCompletedEventArgs e)
+        {
+            bool_Sliding = false;
+
+            Window_Main.Title = "SLIDING COMPLETED";
+        }
+
+        private void Slider_Control_ValueChanged(object sender, RoutedPropertyChangedEventArgs<double> e)
+        {
         }
     }
 }
