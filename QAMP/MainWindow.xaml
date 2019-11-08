@@ -28,6 +28,7 @@
             <Button Name="Button_Stop" BorderThickness="0,0,0,0" Click="Handle_Button_Stop_Click">
                 <Image x:Name="Image_Stop" Source="Image\Stop.png" Stretch="None"/>
             </Button>
+            <TextBlock Name="TextBlock_TimeCode" HorizontalAlignment="Center" VerticalAlignment="Center" Margin="4,0,4,1" >00:00:00</TextBlock>
         </StackPanel>
 
         <StackPanel Grid.Row="2" x:Name="StackPanel_Slide">

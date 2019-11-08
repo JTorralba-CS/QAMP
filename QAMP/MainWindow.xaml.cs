@@ -14,6 +14,7 @@ using System.Windows.Navigation;
 using System.Windows.Shapes;
 
 using System.Windows.Controls.Primitives;
+using System.Windows.Threading;
 
 using Un4seen.Bass;
 
@@ -31,6 +32,9 @@ namespace QAMP
         private long long_Duration_Bytes = 0;
         private double double_Duration_Seconds = 0;
 
+        private long long_Position_Bytes = 0;
+        private double double_Position_Seconds = 0;
+
         private bool bool_Playing = false;
         private bool bool_Sliding = false;
 
@@ -39,6 +43,11 @@ namespace QAMP
             InitializeComponent();
 
             Window_Main.Title = "QAMP " + typeof(MainWindow).Assembly.GetName().Version.ToString();
+
+            DispatcherTimer Timer = new DispatcherTimer();
+            Timer.Interval = TimeSpan.FromMilliseconds(250);
+            Timer.Tick += Timer_Tick;
+            Timer.Start();
         }
 
         private void Handle_Window_Main_ContentRendered(object Sender, EventArgs E)
@@ -59,6 +68,9 @@ namespace QAMP
                     {
                         long_Duration_Bytes = Bass.BASS_ChannelGetLength(int_Stream);
                         double_Duration_Seconds = Bass.BASS_ChannelBytes2Seconds(int_Stream, long_Duration_Bytes);
+
+                        Slider_Control.Minimum = 0;
+                        Slider_Control.Maximum = double_Duration_Seconds;
 
                         Window_Main.Title = "Stream created.";
 
@@ -133,12 +145,24 @@ namespace QAMP
         private void Slider_Control_DragCompleted(object Sender, DragCompletedEventArgs E)
         {
             bool_Sliding = false;
-
+            Bass.BASS_ChannelSetPosition(int_Stream, Bass.BASS_ChannelSeconds2Bytes(int_Stream, Slider_Control.Value));
             Window_Main.Title = "SLIDING COMPLETED";
         }
 
         private void Slider_Control_ValueChanged(object Sender, RoutedPropertyChangedEventArgs<double> E)
         {
+            TextBlock_TimeCode.Text = TimeSpan.FromSeconds(Slider_Control.Value).ToString(@"hh\:mm\:ss");
+        }
+
+        private void Timer_Tick(object Sender, EventArgs E)
+        {
+            if ((int_Stream != 0) && (!bool_Sliding))
+            {
+                long_Position_Bytes = Bass.BASS_ChannelGetPosition(int_Stream);
+                double_Position_Seconds = Bass.BASS_ChannelBytes2Seconds(int_Stream, long_Position_Bytes);
+
+                Slider_Control.Value = double_Position_Seconds;
+            }
         }
     }
 }
