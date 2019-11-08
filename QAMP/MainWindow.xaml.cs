@@ -38,6 +38,8 @@ namespace QAMP
         private bool bool_Playing = false;
         private bool bool_Sliding = false;
 
+        Line Line_Horizontal_Axis = new Line();
+
         public MainWindow()
         {
             InitializeComponent();
@@ -52,6 +54,7 @@ namespace QAMP
 
         private void Handle_Window_Main_ContentRendered(object Sender, EventArgs E)
         {
+
             if (Bass.BASS_Init(-1, 44100, BASSInit.BASS_DEVICE_DEFAULT, IntPtr.Zero))
             {
 
@@ -84,10 +87,31 @@ namespace QAMP
             }
         }
 
+        private void Handle_Window_Main_SizeChanged(object sender, SizeChangedEventArgs e)
+        {
+            StackPanel_Graph.Children.Remove(Line_Horizontal_Axis);
+            Create_Horizontal_Axis();
+        }
+
         private void Handle_Window_Main_Closing(object Sender, System.ComponentModel.CancelEventArgs E)
         {
             Bass.BASS_StreamFree(int_Stream);
             Bass.BASS_Free();
+        }
+
+        private void Create_Horizontal_Axis()
+        {
+            Line_Horizontal_Axis.Stroke = System.Windows.Media.Brushes.WhiteSmoke;
+
+            Line_Horizontal_Axis.X1 = 0;
+            Line_Horizontal_Axis.Y1 = StackPanel_Graph.ActualHeight / 2;
+
+            Line_Horizontal_Axis.X2 = StackPanel_Graph.ActualWidth;
+            Line_Horizontal_Axis.Y2 = StackPanel_Graph.ActualHeight / 2;
+
+            Line_Horizontal_Axis.StrokeThickness = .5;
+
+            StackPanel_Graph.Children.Add(Line_Horizontal_Axis);
         }
 
         private void Handle_Button_Play_Click(object Sender, RoutedEventArgs E)
