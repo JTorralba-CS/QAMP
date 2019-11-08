@@ -8,6 +8,11 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <None Remove="Audio\Leave A Message.wav" />
+    <None Remove="Audio\Yabba-Dabba-Doo.mp3" />
+    <None Remove="BASS.dll" />
+    <None Remove="BASS.NET.dll" />
+    <None Remove="BASS.NET.xml" />
     <None Remove="Image\Application.png" />
     <None Remove="Image\Pause.png" />
     <None Remove="Image\Play.png" />
@@ -15,6 +20,24 @@
   </ItemGroup>
 
   <ItemGroup>
+    <Content Include="Audio\Leave A Message.wav">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Audio\Yabba-Dabba-Doo.mp3">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="BASS.dll">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="BASS.NET.dll">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="BASS.NET.xml">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Reference Include="Bass.Net">
+      <HintPath>BASS.NET.dll</HintPath>
+    </Reference>
     <Resource Include="Image\Application.png" />
     <Resource Include="Image\Pause.png" />
     <Resource Include="Image\Play.png" />
