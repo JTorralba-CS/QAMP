@@ -40,6 +40,9 @@ namespace QAMP
 
         Line Line_Horizontal_Axis = new Line();
 
+        Line Line_Vertical_Axis = new Line();
+        double double_Vertical_Axis_Margin_Left = 0;
+
         public MainWindow()
         {
             InitializeComponent();
@@ -77,6 +80,7 @@ namespace QAMP
 
                         Window_Main.Title = "Stream created.";
 
+                        Create_Vertical_Axis();
                         Button_Play.RaiseEvent(new RoutedEventArgs(ButtonBase.ClickEvent));
                     }
                 }
@@ -89,8 +93,11 @@ namespace QAMP
 
         private void Handle_Window_Main_SizeChanged(object sender, SizeChangedEventArgs e)
         {
-            StackPanel_Graph.Children.Remove(Line_Horizontal_Axis);
-            Create_Horizontal_Axis();
+
+            //StackPanel_Graph.Children.Remove(Line_Horizontal_Axis);
+            //Create_Horizontal_Axis();
+
+            Update_Vertical_Axis();
         }
 
         private void Handle_Window_Main_Closing(object Sender, System.ComponentModel.CancelEventArgs E)
@@ -112,6 +119,27 @@ namespace QAMP
             Line_Horizontal_Axis.StrokeThickness = .5;
 
             StackPanel_Graph.Children.Add(Line_Horizontal_Axis);
+        }
+
+        private void Create_Vertical_Axis()
+        {
+            Line_Vertical_Axis.Stroke = System.Windows.Media.Brushes.WhiteSmoke;
+
+            Line_Vertical_Axis.X1 = 0;
+            Line_Vertical_Axis.Y1 = 0;
+
+            Line_Vertical_Axis.X2 = 0;
+            Line_Vertical_Axis.Y2 = StackPanel_Graph.ActualHeight;
+
+            Line_Vertical_Axis.StrokeThickness = .5;
+
+            StackPanel_Graph.Children.Add(Line_Vertical_Axis);
+        }
+
+        private void Update_Vertical_Axis()
+        {
+            double_Vertical_Axis_Margin_Left = ((Slider_Control.Value / Slider_Control.Maximum) * (StackPanel_Graph.ActualWidth));
+            Line_Vertical_Axis.Margin = new Thickness(double_Vertical_Axis_Margin_Left, 0, 0, 0);
         }
 
         private void Handle_Button_Play_Click(object Sender, RoutedEventArgs E)
@@ -175,7 +203,9 @@ namespace QAMP
 
         private void Slider_Control_ValueChanged(object Sender, RoutedPropertyChangedEventArgs<double> E)
         {
+
             TextBlock_TimeCode.Text = TimeSpan.FromSeconds(Slider_Control.Value).ToString(@"hh\:mm\:ss");
+            Update_Vertical_Axis();
         }
 
         private void Timer_Tick(object Sender, EventArgs E)
