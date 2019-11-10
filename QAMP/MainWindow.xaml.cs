@@ -38,8 +38,9 @@ namespace QAMP
         private bool bool_Playing = false;
         private bool bool_Sliding = false;
 
-        Line Line_Horizontal_Axis = new Line();
+        //Line Line_Horizontal_Axis = new Line();
 
+        double double_Horizontal_Axis_Margin_Top = 0;
         double double_Vertical_Axis_Margin_Left = 0;
 
         public MainWindow()
@@ -96,6 +97,7 @@ namespace QAMP
             //StackPanel_Graph.Children.Remove(Line_Horizontal_Axis);
             //Create_Horizontal_Axis();
 
+            Update_Horizontal_Axis();
             Update_Vertical_Axis();
         }
 
@@ -107,19 +109,24 @@ namespace QAMP
 
         private void Create_Horizontal_Axis()
         {
-            Line_Horizontal_Axis.Stroke = System.Windows.Media.Brushes.WhiteSmoke;
+            //Line_Horizontal_Axis.Stroke = System.Windows.Media.Brushes.WhiteSmoke;
 
-            Line_Horizontal_Axis.X1 = 0;
-            Line_Horizontal_Axis.Y1 = StackPanel_Graph.ActualHeight / 2;
+            //Line_Horizontal_Axis.X1 = 0;
+            //Line_Horizontal_Axis.Y1 = StackPanel_Graph.ActualHeight / 2;
 
-            Line_Horizontal_Axis.X2 = StackPanel_Graph.ActualWidth;
-            Line_Horizontal_Axis.Y2 = StackPanel_Graph.ActualHeight / 2;
+            //Line_Horizontal_Axis.X2 = StackPanel_Graph.ActualWidth;
+            //Line_Horizontal_Axis.Y2 = StackPanel_Graph.ActualHeight / 2;
 
-            Line_Horizontal_Axis.StrokeThickness = .5;
+            //Line_Horizontal_Axis.StrokeThickness = .5;
 
-            StackPanel_Graph.Children.Add(Line_Horizontal_Axis);
+            //StackPanel_Graph.Children.Add(Line_Horizontal_Axis);
         }
 
+        private void Update_Horizontal_Axis()
+        {
+            double_Horizontal_Axis_Margin_Top = (StackPanel_Graph.ActualHeight / 2);
+            Line_Horizontal_Axis.Margin = new Thickness(0, double_Horizontal_Axis_Margin_Top, 0, 0);
+        }
         private void Update_Vertical_Axis()
         {
             double_Vertical_Axis_Margin_Left = ((Slider_Control.Value / Slider_Control.Maximum) * (StackPanel_Graph.ActualWidth));
