@@ -38,8 +38,6 @@ namespace QAMP
         private bool bool_Playing = false;
         private bool bool_Sliding = false;
 
-        //Line Line_Horizontal_Axis = new Line();
-
         double double_Horizontal_Axis_Margin_Top = 0;
         double double_Vertical_Axis_Margin_Left = 0;
 
@@ -80,7 +78,6 @@ namespace QAMP
 
                         Window_Main.Title = "Stream created.";
 
-                        //Create_Vertical_Axis();
                         Button_Play.RaiseEvent(new RoutedEventArgs(ButtonBase.ClickEvent));
                     }
                 }
@@ -93,10 +90,6 @@ namespace QAMP
 
         private void Handle_Window_Main_SizeChanged(object sender, SizeChangedEventArgs e)
         {
-
-            //StackPanel_Graph.Children.Remove(Line_Horizontal_Axis);
-            //Create_Horizontal_Axis();
-
             Update_Horizontal_Axis();
             Update_Vertical_Axis();
         }
@@ -105,21 +98,6 @@ namespace QAMP
         {
             Bass.BASS_StreamFree(int_Stream);
             Bass.BASS_Free();
-        }
-
-        private void Create_Horizontal_Axis()
-        {
-            //Line_Horizontal_Axis.Stroke = System.Windows.Media.Brushes.WhiteSmoke;
-
-            //Line_Horizontal_Axis.X1 = 0;
-            //Line_Horizontal_Axis.Y1 = StackPanel_Graph.ActualHeight / 2;
-
-            //Line_Horizontal_Axis.X2 = StackPanel_Graph.ActualWidth;
-            //Line_Horizontal_Axis.Y2 = StackPanel_Graph.ActualHeight / 2;
-
-            //Line_Horizontal_Axis.StrokeThickness = .5;
-
-            //StackPanel_Graph.Children.Add(Line_Horizontal_Axis);
         }
 
         private void Update_Horizontal_Axis()
@@ -188,14 +166,15 @@ namespace QAMP
         private void Slider_Control_DragCompleted(object Sender, DragCompletedEventArgs E)
         {
             bool_Sliding = false;
+
             Bass.BASS_ChannelSetPosition(int_Stream, Bass.BASS_ChannelSeconds2Bytes(int_Stream, Slider_Control.Value));
             Window_Main.Title = "SLIDING COMPLETED";
         }
 
         private void Slider_Control_ValueChanged(object Sender, RoutedPropertyChangedEventArgs<double> E)
         {
-
             TextBlock_TimeCode.Text = TimeSpan.FromSeconds(Slider_Control.Value).ToString(@"hh\:mm\:ss");
+
             Update_Vertical_Axis();
         }
 
@@ -205,7 +184,6 @@ namespace QAMP
             {
                 long_Position_Bytes = Bass.BASS_ChannelGetPosition(int_Stream);
                 double_Position_Seconds = Bass.BASS_ChannelBytes2Seconds(int_Stream, long_Position_Bytes);
-
                 Slider_Control.Value = double_Position_Seconds;
             }
         }
