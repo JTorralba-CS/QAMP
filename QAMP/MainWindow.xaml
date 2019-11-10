@@ -29,9 +29,9 @@
                 <Image x:Name="Image_Stop" Source="Image\Stop.png" Stretch="None"/>
             </Button>
             <TextBlock Name="TextBlock_TimeCode" HorizontalAlignment="Center" VerticalAlignment="Center" Margin="4,0,4,1" >00:00:00</TextBlock>
-            <TextBlock Name="TextBlock_Width" HorizontalAlignment="Center" VerticalAlignment="Center" Margin="4,0,0,1" Text="{Binding ElementName=StackPanel_Graph,Path=ActualWidth}"></TextBlock>
+            <!--<TextBlock Name="TextBlock_Width" HorizontalAlignment="Center" VerticalAlignment="Center" Margin="4,0,0,1" Text="{Binding ElementName=StackPanel_Graph,Path=ActualWidth}"></TextBlock>
             <TextBlock Name="TextBlock_X" HorizontalAlignment="Center" VerticalAlignment="Center" Margin="2,0,0,1" Text="X"></TextBlock>
-            <TextBlock Name="TextBlock_Height" HorizontalAlignment="Center" VerticalAlignment="Center" Margin="2,0,0,1" Text="{Binding ElementName=StackPanel_Graph,Path=ActualHeight}"></TextBlock>
+            <TextBlock Name="TextBlock_Height" HorizontalAlignment="Center" VerticalAlignment="Center" Margin="2,0,0,1" Text="{Binding ElementName=StackPanel_Graph,Path=ActualHeight}"></TextBlock>-->
         </StackPanel>
 
         <StackPanel Grid.Row="1" x:Name="StackPanel_Graph" Margin="4,0">
