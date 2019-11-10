@@ -40,7 +40,6 @@ namespace QAMP
 
         Line Line_Horizontal_Axis = new Line();
 
-        Line Line_Vertical_Axis = new Line();
         double double_Vertical_Axis_Margin_Left = 0;
 
         public MainWindow()
@@ -80,7 +79,7 @@ namespace QAMP
 
                         Window_Main.Title = "Stream created.";
 
-                        Create_Vertical_Axis();
+                        //Create_Vertical_Axis();
                         Button_Play.RaiseEvent(new RoutedEventArgs(ButtonBase.ClickEvent));
                     }
                 }
@@ -119,21 +118,6 @@ namespace QAMP
             Line_Horizontal_Axis.StrokeThickness = .5;
 
             StackPanel_Graph.Children.Add(Line_Horizontal_Axis);
-        }
-
-        private void Create_Vertical_Axis()
-        {
-            Line_Vertical_Axis.Stroke = System.Windows.Media.Brushes.WhiteSmoke;
-
-            Line_Vertical_Axis.X1 = 0;
-            Line_Vertical_Axis.Y1 = 0;
-
-            Line_Vertical_Axis.X2 = 0;
-            Line_Vertical_Axis.Y2 = StackPanel_Graph.ActualHeight;
-
-            Line_Vertical_Axis.StrokeThickness = .5;
-
-            StackPanel_Graph.Children.Add(Line_Vertical_Axis);
         }
 
         private void Update_Vertical_Axis()
