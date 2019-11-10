@@ -42,7 +42,12 @@
         </StackPanel>
        
         <StackPanel Grid.Row="2" x:Name="StackPanel_Slide">
-            <Slider x:Name="Slider_Control" Thumb.DragStarted="Slider_Control_DragStarted" Thumb.DragCompleted="Slider_Control_DragCompleted" ValueChanged="Slider_Control_ValueChanged"/>
+            <local:CustomSlider x:Name="Slider_Control" IsMoveToPointEnabled="True" IsSnapToTickEnabled="False" AutoToolTipPlacement="TopLeft" AutoToolTipPrecision="2" Thumb.DragStarted="Slider_Control_DragStarted" Thumb.DragCompleted="Slider_Control_DragCompleted" ValueChanged="Slider_Control_ValueChanged">
+                <Slider.Resources>
+                    <Style TargetType="{x:Type local:CustomSlider}">
+                    </Style>
+                </Slider.Resources>
+            </local:CustomSlider>
         </StackPanel>
 
     </Grid>

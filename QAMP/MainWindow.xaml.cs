@@ -182,9 +182,21 @@ namespace QAMP
         {
             if ((int_Stream != 0) && (!bool_Sliding))
             {
+                if (Slider_Control.Clicked)
+                {
+                    Bass.BASS_ChannelSetPosition(int_Stream, Slider_Control.Position);
+                    Slider_Control.Clicked = false;
+
+                    if (!bool_Playing)
+                    {
+                        Button_Play.RaiseEvent(new RoutedEventArgs(ButtonBase.ClickEvent));
+                    }
+                }
+
                 long_Position_Bytes = Bass.BASS_ChannelGetPosition(int_Stream);
                 double_Position_Seconds = Bass.BASS_ChannelBytes2Seconds(int_Stream, long_Position_Bytes);
-                Slider_Control.Value = double_Position_Seconds;
+
+                Slider_Control.UpdateValue(double_Position_Seconds);
             }
         }
     }
