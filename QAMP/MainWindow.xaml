@@ -35,9 +35,9 @@
         </StackPanel>
 
         <StackPanel Grid.Row="1" x:Name="StackPanel_Graph" Margin="4,0">
-            <Line x:Name="Line_Vertical_Axis" X1="0" Y1="0" X2="0" Y2="{Binding ActualHeight, Mode=OneWay, 
-               RelativeSource={RelativeSource FindAncestor, 
-               AncestorType={x:Type local:MainWindow}}}" Stroke="WhiteSmoke" StrokeThickness="0.5"/>
+            <Canvas>
+                <Line x:Name="Line_Vertical_Axis" X1="0" Y1="0" X2="0" Y2="{Binding ActualHeight, Mode=OneWay, RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type local:MainWindow}}}" Stroke="WhiteSmoke" StrokeThickness="0.5"/>
+            </Canvas>
         </StackPanel>
        
         <StackPanel Grid.Row="2" x:Name="StackPanel_Slide">
