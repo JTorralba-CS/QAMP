@@ -185,12 +185,31 @@ namespace QAMP
                 if (Slider_Control.Clicked)
                 {
                     Bass.BASS_ChannelSetPosition(int_Stream, Slider_Control.Position);
-                    Slider_Control.Clicked = false;
 
-                    if (!bool_Playing)
+                    switch (Slider_Control.Button)
                     {
-                        Button_Play.RaiseEvent(new RoutedEventArgs(ButtonBase.ClickEvent));
-                    }
+                        case "LEFT":
+                            if (bool_Playing == false)
+                            {
+                                Button_Play.RaiseEvent(new RoutedEventArgs(ButtonBase.ClickEvent));
+                            }
+                            break;
+                        case "RIGHT":
+                            if (bool_Playing == true)
+                            {
+                                Button_Play.RaiseEvent(new RoutedEventArgs(ButtonBase.ClickEvent));
+                            }
+                            break;
+                        default:
+                            break;
+                    };
+
+                    TextBlock_DEBUG.Text = "SLIDER_" + Slider_Control.Button + "_BUTTON_CLICKED";
+
+                    Slider_Control.Clicked = false;
+                    Slider_Control.Button = null;
+
+
                 }
 
                 long_Position_Bytes = Bass.BASS_ChannelGetPosition(int_Stream);

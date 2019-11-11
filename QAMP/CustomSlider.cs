@@ -20,6 +20,14 @@ namespace QAMP
             set { bool_Clicked = value; }
         }
 
+        private string string_Button = null;
+
+        public string Button
+        {
+            get { return string_Button; }
+            set { string_Button = value; }
+        }
+
         private double double_Position = 0;
 
         public double Position
@@ -47,6 +55,25 @@ namespace QAMP
                     UpdateValue(double_Position);
 
                 bool_Clicked = true;
+                string_Button = "LEFT";
+
+                E.Handled = true;
+            }
+        }
+
+        protected override void OnPreviewMouseRightButtonDown(MouseButtonEventArgs E)
+        {
+            if (IsMoveToPointEnabled && Track_SlideBar != null && Track_SlideBar.Thumb != null && !Track_SlideBar.Thumb.IsMouseOver)
+            {
+                Point XY = E.MouseDevice.GetPosition(Track_SlideBar);
+
+                double_Position = Track_SlideBar.ValueFromPoint(XY);
+
+                if (!double.IsInfinity(double_Position))
+                    UpdateValue(double_Position);
+
+                bool_Clicked = true;
+                string_Button = "RIGHT";
 
                 E.Handled = true;
             }
