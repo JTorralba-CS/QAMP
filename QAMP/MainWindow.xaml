@@ -13,6 +13,87 @@
         </LinearGradientBrush>
     </Window.Background>
 
+    <Window.Resources>
+
+        <Style x:Key="Slider_Left" TargetType="RepeatButton">
+            <Setter Property="SnapsToDevicePixels" Value="true" />
+            <Setter Property="OverridesDefaultStyle" Value="true" />
+            <Setter Property="IsTabStop" Value="false" />
+            <Setter Property="Focusable" Value="false" />
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="RepeatButton">
+                        <Border SnapsToDevicePixels="True" Background="LightBlue" Height="1"/>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+        </Style>
+
+        <Style x:Key="Slider_Right" TargetType="RepeatButton">
+            <Setter Property="SnapsToDevicePixels" Value="true" />
+            <Setter Property="OverridesDefaultStyle" Value="true" />
+            <Setter Property="IsTabStop" Value="false" />
+            <Setter Property="Focusable" Value="false" />
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="RepeatButton">
+                        <Border SnapsToDevicePixels="True" Background="LightGray" Height="1"/>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+        </Style>
+
+        <Style x:Key="Slider_Thumb" TargetType="Thumb">
+            <Setter Property="SnapsToDevicePixels" Value="true" />
+            <Setter Property="OverridesDefaultStyle" Value="true" />
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="Thumb">
+                        <!--<Ellipse Height="24" Width="24">
+                            <Ellipse.Fill>
+                                <ImageBrush ImageSource="Image\Stop.png"></ImageBrush>
+                            </Ellipse.Fill>
+                        </Ellipse>-->
+                        <Ellipse Fill="LightBlue" Stroke="LightBlue" Height="{Binding ElementName=StackPanel_Graph,Path=ActualHeight}" Width="1"/>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+        </Style>
+
+        <ControlTemplate x:Key="Slider"  TargetType="Slider">
+            <Grid>
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="Auto" />
+                    <RowDefinition Height="Auto" MinHeight="{TemplateBinding MinHeight}" />
+                    <RowDefinition Height="Auto" />
+                </Grid.RowDefinitions>
+                <Track Grid.Row="1" x:Name="PART_Track"   >
+                    <Track.DecreaseRepeatButton>
+                        <RepeatButton Style="{StaticResource Slider_Left}"  Command="Slider.DecreaseLarge" />
+                    </Track.DecreaseRepeatButton>
+                    <Track.Thumb>
+                        <Thumb Style="{StaticResource Slider_Thumb}"  />
+                    </Track.Thumb>
+                    <Track.IncreaseRepeatButton>
+                        <RepeatButton Style="{StaticResource Slider_Right}" Command="Slider.IncreaseLarge" />
+                    </Track.IncreaseRepeatButton>
+
+                </Track>
+            </Grid>
+        </ControlTemplate>
+
+        <Style x:Key="Slider_Axis_Style" TargetType="Slider">
+            <Setter Property="Focusable" Value="False"/>
+            <Setter Property="SnapsToDevicePixels" Value="true" />
+            <Setter Property="OverridesDefaultStyle" Value="true" />
+            <Style.Triggers>
+                <Trigger Property="Orientation" Value="Horizontal">
+                    <Setter Property="Template" Value="{StaticResource Slider}" />
+                </Trigger>
+            </Style.Triggers>
+        </Style>
+    </Window.Resources>
+
     <Grid x:Name="Grid_Main">
 
         <Grid.RowDefinitions>
@@ -35,13 +116,12 @@
             <TextBlock Name="TextBlock_Height" HorizontalAlignment="Center" VerticalAlignment="Center" Margin="2,0,0,1" Text="{Binding ElementName=StackPanel_Graph,Path=ActualHeight}"></TextBlock>-->
         </StackPanel>
 
-        <StackPanel Grid.Row="1" x:Name="StackPanel_Graph" Margin="4,0">
+        <StackPanel Grid.Row="1" x:Name="StackPanel_Graph" Margin="4,0,4,0">
             <Canvas x:Name="Canvas_Graph">
-                <Line x:Name="Line_Horizontal_Axis" X1="0" Y1="0" X2="{Binding ElementName=Canvas_Graph,Path=ActualWidth}" Y2="0" Stroke="WhiteSmoke" StrokeThickness="0.5"/>
-                <Line x:Name="Line_Vertical_Axis" X1="0" Y1="0" X2="0" Y2="{Binding ActualHeight, Mode=OneWay, RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type local:MainWindow}}}" Stroke="WhiteSmoke" StrokeThickness="0.5"/>
+                <Slider Name="Slider_Axis" Style="{StaticResource Slider_Axis_Style}" MinWidth="{Binding ElementName=Canvas_Graph,Path=ActualWidth}" MinHeight="{Binding ElementName=StackPanel_Graph,Path=ActualHeight}" IsEnabled="False"/>
             </Canvas>
         </StackPanel>
-       
+      
         <StackPanel Grid.Row="2" x:Name="StackPanel_Slide">
             <local:CustomSlider x:Name="Slider_Control" IsMoveToPointEnabled="True" IsSnapToTickEnabled="False" AutoToolTipPlacement="TopLeft" AutoToolTipPrecision="2" Thumb.DragStarted="Slider_Control_DragStarted" Thumb.DragCompleted="Slider_Control_DragCompleted" ValueChanged="Slider_Control_ValueChanged">
                 <Slider.Resources>

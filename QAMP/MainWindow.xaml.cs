@@ -38,9 +38,6 @@ namespace QAMP
         private bool bool_Playing = false;
         private bool bool_Sliding = false;
 
-        double double_Horizontal_Axis_Margin_Top = 0;
-        double double_Vertical_Axis_Margin_Left = 0;
-
         public MainWindow()
         {
             InitializeComponent();
@@ -76,6 +73,9 @@ namespace QAMP
                         Slider_Control.Minimum = 0;
                         Slider_Control.Maximum = double_Duration_Seconds;
 
+                        Slider_Axis.Minimum = 0;
+                        Slider_Axis.Maximum = double_Duration_Seconds;
+
                         Window_Main.Title = "Stream created.";
 
                         Button_Play.RaiseEvent(new RoutedEventArgs(ButtonBase.ClickEvent));
@@ -90,25 +90,12 @@ namespace QAMP
 
         private void Handle_Window_Main_SizeChanged(object sender, SizeChangedEventArgs e)
         {
-            Update_Horizontal_Axis();
-            Update_Vertical_Axis();
         }
 
         private void Handle_Window_Main_Closing(object Sender, System.ComponentModel.CancelEventArgs E)
         {
             Bass.BASS_StreamFree(int_Stream);
             Bass.BASS_Free();
-        }
-
-        private void Update_Horizontal_Axis()
-        {
-            double_Horizontal_Axis_Margin_Top = (StackPanel_Graph.ActualHeight / 2);
-            Line_Horizontal_Axis.Margin = new Thickness(0, double_Horizontal_Axis_Margin_Top, 0, 0);
-        }
-        private void Update_Vertical_Axis()
-        {
-            double_Vertical_Axis_Margin_Left = ((Slider_Control.Value / Slider_Control.Maximum) * (StackPanel_Graph.ActualWidth));
-            Line_Vertical_Axis.Margin = new Thickness(double_Vertical_Axis_Margin_Left, 0, 0, 0);
         }
 
         private void Handle_Button_Play_Click(object Sender, RoutedEventArgs E)
@@ -183,7 +170,7 @@ namespace QAMP
         {
             TextBlock_TimeCode.Text = TimeSpan.FromSeconds(Slider_Control.Value).ToString(@"hh\:mm\:ss");
 
-            Update_Vertical_Axis();
+            Slider_Axis.Value = Slider_Control.Value;
         }
 
         private void Timer_Tick(object Sender, EventArgs E)
