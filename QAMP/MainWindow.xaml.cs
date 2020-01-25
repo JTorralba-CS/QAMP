@@ -167,7 +167,15 @@ namespace QAMP
         {
             bool_Sliding = false;
 
-            Bass.BASS_ChannelSetPosition(int_Stream, Bass.BASS_ChannelSeconds2Bytes(int_Stream, Slider_Control.Value));
+            if (Slider_Control.Value < Slider_Control.Maximum)
+            {
+                Bass.BASS_ChannelSetPosition(int_Stream, Bass.BASS_ChannelSeconds2Bytes(int_Stream, Slider_Control.Value));
+            }
+            else
+            {
+                Bass.BASS_ChannelSetPosition(int_Stream, Bass.BASS_ChannelSeconds2Bytes(int_Stream, Slider_Control.Maximum - 0.125));
+            }
+
             Window_Main.Title = "SLIDING COMPLETED";
         }
 
@@ -184,7 +192,15 @@ namespace QAMP
             {
                 if (Slider_Control.Clicked)
                 {
-                    Bass.BASS_ChannelSetPosition(int_Stream, Slider_Control.Position);
+                    if (Slider_Control.Position < Slider_Control.Maximum)
+                    {
+                        Bass.BASS_ChannelSetPosition(int_Stream, Slider_Control.Position);
+                    }
+                    else
+                    {
+                        Bass.BASS_ChannelSetPosition(int_Stream, Slider_Control.Position - 0.125);
+                    }
+                    
 
                     switch (Slider_Control.Button)
                     {
