@@ -116,7 +116,7 @@
             <TextBlock Name="TextBlock_Height" HorizontalAlignment="Center" VerticalAlignment="Center" Margin="2,0,0,1" Text="{Binding ElementName=StackPanel_Graph,Path=ActualHeight}"></TextBlock>-->
         </StackPanel>
 
-        <StackPanel Grid.Row="1" x:Name="StackPanel_Graph" Margin="4,0,4,0">
+        <StackPanel Grid.Row="1" x:Name="StackPanel_Graph" Margin="4,8,4,0">
             <Canvas x:Name="Canvas_Graph">
                 <Slider Name="Slider_Axis" Style="{StaticResource Slider_Axis_Style}" MinWidth="{Binding ElementName=Canvas_Graph,Path=ActualWidth}" MinHeight="{Binding ElementName=StackPanel_Graph,Path=ActualHeight}" IsEnabled="False"/>
             </Canvas>

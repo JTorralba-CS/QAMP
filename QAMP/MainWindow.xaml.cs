@@ -38,6 +38,14 @@ namespace QAMP
         private bool bool_Playing = false;
         private bool bool_Sliding = false;
 
+        private int int_Level_Stereo = 0;
+
+        private double double_Level_Left = 0;
+        private double double_Level_Right = 0;
+
+        private Line Audio_Peak_Left = null;
+        private Line Audio_Peak_Right = null;
+
         public MainWindow()
         {
             InitializeComponent();
@@ -215,10 +223,45 @@ namespace QAMP
 
                 }
 
+                int_Level_Stereo = Bass.BASS_ChannelGetLevel(int_Stream);
+
+                if (int_Level_Stereo == -1)
+                {
+                    int_Level_Stereo = 0;
+                }
+                double_Level_Left = Utils.HighWord32(int_Level_Stereo) / (32768 / (StackPanel_Graph.ActualHeight / 2));
+                double_Level_Right = Utils.LowWord32(int_Level_Stereo) / (32768 / (StackPanel_Graph.ActualHeight / 2));
+
+                Window_Main.Title = double_Level_Left.ToString("000.00") +" | " + double_Level_Right.ToString("000.00");
+
                 long_Position_Bytes = Bass.BASS_ChannelGetPosition(int_Stream);
                 double_Position_Seconds = Bass.BASS_ChannelBytes2Seconds(int_Stream, long_Position_Bytes);
 
                 Slider_Control.UpdateValue(double_Position_Seconds);
+
+                Audio_Peak_Left = new Line();
+                Audio_Peak_Left.Stroke = System.Windows.Media.Brushes.White;
+                Audio_Peak_Left.Fill = System.Windows.Media.Brushes.White;
+
+                Audio_Peak_Left.X1 = double_Position_Seconds * (StackPanel_Graph.ActualWidth / Slider_Control.Maximum);
+                Audio_Peak_Left.Y1 = StackPanel_Graph.ActualHeight / 2;
+
+                Audio_Peak_Left.X2 = Audio_Peak_Left.X1;
+                Audio_Peak_Left.Y2 = Audio_Peak_Left.Y1 - double_Level_Left;
+
+                Canvas_Graph.Children.Add(Audio_Peak_Left);
+
+                Audio_Peak_Right = new Line();
+                Audio_Peak_Right.Stroke = System.Windows.Media.Brushes.Red;
+                Audio_Peak_Right.Fill = System.Windows.Media.Brushes.Red;
+
+                Audio_Peak_Right.X1 = double_Position_Seconds * (StackPanel_Graph.ActualWidth / Slider_Control.Maximum);
+                Audio_Peak_Right.Y1 = StackPanel_Graph.ActualHeight / 2;
+
+                Audio_Peak_Right.X2 = Audio_Peak_Right.X1;
+                Audio_Peak_Right.Y2 = Audio_Peak_Right.Y1 + double_Level_Right;
+
+                Canvas_Graph.Children.Add(Audio_Peak_Right);
             }
         }
     }
