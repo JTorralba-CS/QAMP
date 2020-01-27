@@ -118,6 +118,8 @@
 
         <StackPanel Grid.Row="1" x:Name="StackPanel_Graph" Margin="4,8,4,0">
             <Canvas x:Name="Canvas_Graph">
+                <Canvas x:Name="Canvas_Lines">
+                </Canvas>
                 <Slider Name="Slider_Axis" Style="{StaticResource Slider_Axis_Style}" MinWidth="{Binding ElementName=Canvas_Graph,Path=ActualWidth}" MinHeight="{Binding ElementName=StackPanel_Graph,Path=ActualHeight}" IsEnabled="False"/>
             </Canvas>
         </StackPanel>

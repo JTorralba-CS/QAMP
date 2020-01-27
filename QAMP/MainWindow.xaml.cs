@@ -98,6 +98,7 @@ namespace QAMP
 
         private void Handle_Window_Main_SizeChanged(object sender, SizeChangedEventArgs e)
         {
+            Canvas_Lines.Children.Clear();
         }
 
         private void Handle_Window_Main_Closing(object Sender, System.ComponentModel.CancelEventArgs E)
@@ -232,7 +233,7 @@ namespace QAMP
                 double_Level_Left = Utils.HighWord32(int_Level_Stereo) / (32768 / (StackPanel_Graph.ActualHeight / 2));
                 double_Level_Right = Utils.LowWord32(int_Level_Stereo) / (32768 / (StackPanel_Graph.ActualHeight / 2));
 
-                Window_Main.Title = double_Level_Left.ToString("000.00") +" | " + double_Level_Right.ToString("000.00");
+                Window_Main.Title = double_Level_Left.ToString("000.00") + " | " + double_Level_Right.ToString("000.00");
 
                 long_Position_Bytes = Bass.BASS_ChannelGetPosition(int_Stream);
                 double_Position_Seconds = Bass.BASS_ChannelBytes2Seconds(int_Stream, long_Position_Bytes);
@@ -249,7 +250,7 @@ namespace QAMP
                 Audio_Peak_Left.X2 = Audio_Peak_Left.X1;
                 Audio_Peak_Left.Y2 = Audio_Peak_Left.Y1 - double_Level_Left;
 
-                Canvas_Graph.Children.Add(Audio_Peak_Left);
+                Canvas_Lines.Children.Add(Audio_Peak_Left);
 
                 Audio_Peak_Right = new Line();
                 Audio_Peak_Right.Stroke = System.Windows.Media.Brushes.Red;
@@ -261,7 +262,7 @@ namespace QAMP
                 Audio_Peak_Right.X2 = Audio_Peak_Right.X1;
                 Audio_Peak_Right.Y2 = Audio_Peak_Right.Y1 + double_Level_Right;
 
-                Canvas_Graph.Children.Add(Audio_Peak_Right);
+                Canvas_Lines.Children.Add(Audio_Peak_Right);
             }
         }
     }
