@@ -67,6 +67,7 @@ namespace QAMP
                 int_Stream = Bass.BASS_StreamCreateFile(string_Media, 0L, 0L, BASSFlag.BASS_DEFAULT);
                 if (int_Stream != 0)
                 {
+
                     SYNCPROC_Media = new SYNCPROC(Handle_Media_End);
 
                     if ((Bass.BASS_ChannelSetSync(int_Stream, BASSSync.BASS_SYNC_END, 0, SYNCPROC_Media, IntPtr.Zero)) == 0)
@@ -86,7 +87,9 @@ namespace QAMP
 
                         Window_Main.Title = "Stream created.";
 
-                        Button_Play.RaiseEvent(new RoutedEventArgs(ButtonBase.ClickEvent));
+                        Audio_Graph();
+
+                        //Button_Play.RaiseEvent(new RoutedEventArgs(ButtonBase.ClickEvent));
                     }
                 }
                 else
@@ -99,6 +102,10 @@ namespace QAMP
         private void Handle_Window_Main_SizeChanged(object sender, SizeChangedEventArgs e)
         {
             Canvas_Lines.Children.Clear();
+            if (int_Stream != 0)
+            {
+                Audio_Graph();
+            }
         }
 
         private void Handle_Window_Main_Closing(object Sender, System.ComponentModel.CancelEventArgs E)
@@ -182,6 +189,113 @@ namespace QAMP
             Slider_Axis.Value = Slider_Control.Value;
         }
 
+        private void Audio_Peak()
+        {
+            int_Level_Stereo = Bass.BASS_ChannelGetLevel(int_Stream);
+
+            if (int_Level_Stereo == -1)
+            {
+                int_Level_Stereo = 0;
+            }
+            double_Level_Left = Utils.HighWord32(int_Level_Stereo) / (32768 / (StackPanel_Graph.ActualHeight / 2));
+            double_Level_Right = Utils.LowWord32(int_Level_Stereo) / (32768 / (StackPanel_Graph.ActualHeight / 2));
+
+            Window_Main.Title = double_Level_Left.ToString("000.00") + " | " + double_Level_Right.ToString("000.00");
+
+            Audio_Peak_Left = new Line();
+            Audio_Peak_Left.Stroke = System.Windows.Media.Brushes.White;
+            Audio_Peak_Left.Fill = System.Windows.Media.Brushes.White;
+
+            Audio_Peak_Left.X1 = double_Position_Seconds * (StackPanel_Graph.ActualWidth / Slider_Control.Maximum);
+            Audio_Peak_Left.Y1 = StackPanel_Graph.ActualHeight / 2;
+
+            Audio_Peak_Left.X2 = Audio_Peak_Left.X1;
+            Audio_Peak_Left.Y2 = Audio_Peak_Left.Y1 - double_Level_Left;
+
+            Canvas_Lines.Children.Add(Audio_Peak_Left);
+
+            Audio_Peak_Right = new Line();
+            Audio_Peak_Right.Stroke = System.Windows.Media.Brushes.Red;
+            Audio_Peak_Right.Fill = System.Windows.Media.Brushes.Red;
+
+            Audio_Peak_Right.X1 = double_Position_Seconds * (StackPanel_Graph.ActualWidth / Slider_Control.Maximum);
+            Audio_Peak_Right.Y1 = StackPanel_Graph.ActualHeight / 2;
+
+            Audio_Peak_Right.X2 = Audio_Peak_Right.X1;
+            Audio_Peak_Right.Y2 = Audio_Peak_Right.Y1 + double_Level_Right;
+
+            Canvas_Lines.Children.Add(Audio_Peak_Right);
+        }
+
+        private void Audio_Graph()
+        {
+            int stream;
+            int NumFrames;
+            int Error;
+
+            List<double> leftLevelList;
+            List<double> rightLevelList;
+
+            leftLevelList = new List<double>();
+            rightLevelList = new List<double>();
+
+            stream = Bass.BASS_StreamCreateFile(string_Media, 0, 0, BASSFlag.BASS_STREAM_DECODE | BASSFlag.BASS_SAMPLE_FLOAT | BASSFlag.BASS_STREAM_PRESCAN);
+            if (stream == 0) throw new Exception(Bass.BASS_ErrorGetCode().ToString());
+
+            // Set number of frames.
+            long trackLengthInBytes = Bass.BASS_ChannelGetLength(stream);
+            long frameLengthInBytes = Bass.BASS_ChannelSeconds2Bytes(stream, 0.02D);
+            NumFrames = (int)Math.Round(1f * trackLengthInBytes / frameLengthInBytes);
+
+            for (int i = 0; i < NumFrames; i++)
+            {
+                // Get left and right levels.
+
+                int_Level_Stereo = Bass.BASS_ChannelGetLevel(stream);
+
+                if (int_Level_Stereo == -1)
+                {
+                    int_Level_Stereo = 0;
+                }
+                double double_Level_Left = Utils.HighWord32(int_Level_Stereo) / (32768 / (StackPanel_Graph.ActualHeight / 2));
+                double double_Level_Right = Utils.LowWord32(int_Level_Stereo) / (32768 / (StackPanel_Graph.ActualHeight / 2));
+                //MessageBox.Show(double_Level_Left.ToString());
+
+                // Update left and right levels.
+                leftLevelList.Add(double_Level_Left);
+                rightLevelList.Add(double_Level_Right);
+
+                Audio_Peak_Left = new Line();
+                Audio_Peak_Left.Stroke = System.Windows.Media.Brushes.White;
+                Audio_Peak_Left.Fill = System.Windows.Media.Brushes.White;
+
+                //(StackPanel_Graph.ActualHeight - 8) / NumFrames
+                Audio_Peak_Left.X1 = (i * (StackPanel_Graph.ActualWidth - 8) / NumFrames) - 4;
+                Audio_Peak_Left.Y1 = StackPanel_Graph.ActualHeight / 2;
+
+                Audio_Peak_Left.X2 = Audio_Peak_Left.X1;
+                Audio_Peak_Left.Y2 = Audio_Peak_Left.Y1 - double_Level_Left;
+
+                Canvas_Lines.Children.Add(Audio_Peak_Left);
+
+                Audio_Peak_Right = new Line();
+                Audio_Peak_Right.Stroke = System.Windows.Media.Brushes.Red;
+                Audio_Peak_Right.Fill = System.Windows.Media.Brushes.Red;
+
+                Audio_Peak_Right.X1 = (i * (StackPanel_Graph.ActualWidth - 8) / NumFrames) - 4;
+                Audio_Peak_Right.Y1 = StackPanel_Graph.ActualHeight / 2;
+
+                Audio_Peak_Right.X2 = Audio_Peak_Right.X1;
+                Audio_Peak_Right.Y2 = Audio_Peak_Right.Y1 + double_Level_Right;
+
+                Canvas_Lines.Children.Add(Audio_Peak_Right);
+
+
+
+            }
+            //Window_Main.Title = leftLevelList.Count.ToString("000.00") + " | " + rightLevelList.Count.ToString("000.00");
+        }
+
         private void Timer_Tick(object Sender, EventArgs E)
         {
             if ((int_Stream != 0) && (!bool_Sliding))
@@ -224,45 +338,13 @@ namespace QAMP
 
                 }
 
-                int_Level_Stereo = Bass.BASS_ChannelGetLevel(int_Stream);
-
-                if (int_Level_Stereo == -1)
-                {
-                    int_Level_Stereo = 0;
-                }
-                double_Level_Left = Utils.HighWord32(int_Level_Stereo) / (32768 / (StackPanel_Graph.ActualHeight / 2));
-                double_Level_Right = Utils.LowWord32(int_Level_Stereo) / (32768 / (StackPanel_Graph.ActualHeight / 2));
-
-                Window_Main.Title = double_Level_Left.ToString("000.00") + " | " + double_Level_Right.ToString("000.00");
-
                 long_Position_Bytes = Bass.BASS_ChannelGetPosition(int_Stream);
                 double_Position_Seconds = Bass.BASS_ChannelBytes2Seconds(int_Stream, long_Position_Bytes);
 
+                //Audio_Peak();
+
                 Slider_Control.UpdateValue(double_Position_Seconds);
-
-                Audio_Peak_Left = new Line();
-                Audio_Peak_Left.Stroke = System.Windows.Media.Brushes.White;
-                Audio_Peak_Left.Fill = System.Windows.Media.Brushes.White;
-
-                Audio_Peak_Left.X1 = double_Position_Seconds * (StackPanel_Graph.ActualWidth / Slider_Control.Maximum);
-                Audio_Peak_Left.Y1 = StackPanel_Graph.ActualHeight / 2;
-
-                Audio_Peak_Left.X2 = Audio_Peak_Left.X1;
-                Audio_Peak_Left.Y2 = Audio_Peak_Left.Y1 - double_Level_Left;
-
-                Canvas_Lines.Children.Add(Audio_Peak_Left);
-
-                Audio_Peak_Right = new Line();
-                Audio_Peak_Right.Stroke = System.Windows.Media.Brushes.Red;
-                Audio_Peak_Right.Fill = System.Windows.Media.Brushes.Red;
-
-                Audio_Peak_Right.X1 = double_Position_Seconds * (StackPanel_Graph.ActualWidth / Slider_Control.Maximum);
-                Audio_Peak_Right.Y1 = StackPanel_Graph.ActualHeight / 2;
-
-                Audio_Peak_Right.X2 = Audio_Peak_Right.X1;
-                Audio_Peak_Right.Y2 = Audio_Peak_Right.Y1 + double_Level_Right;
-
-                Canvas_Lines.Children.Add(Audio_Peak_Right);
+               
             }
         }
     }
