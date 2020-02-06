@@ -89,7 +89,7 @@ namespace QAMP
 
                         Audio_Graph();
 
-                        //Button_Play.RaiseEvent(new RoutedEventArgs(ButtonBase.ClickEvent));
+                        Button_Play.RaiseEvent(new RoutedEventArgs(ButtonBase.ClickEvent));
                     }
                 }
                 else
@@ -178,7 +178,6 @@ namespace QAMP
             {
                 Bass.BASS_ChannelSetPosition(int_Stream, Bass.BASS_ChannelSeconds2Bytes(int_Stream, Slider_Control.Maximum - 0.125));
             }
-
             Window_Main.Title = "SLIDING COMPLETED";
         }
 
@@ -189,50 +188,11 @@ namespace QAMP
             Slider_Axis.Value = Slider_Control.Value;
         }
 
-        private void Audio_Peak()
-        {
-            int_Level_Stereo = Bass.BASS_ChannelGetLevel(int_Stream);
-
-            if (int_Level_Stereo == -1)
-            {
-                int_Level_Stereo = 0;
-            }
-            double_Level_Left = Utils.HighWord32(int_Level_Stereo) / (32768 / (StackPanel_Graph.ActualHeight / 2));
-            double_Level_Right = Utils.LowWord32(int_Level_Stereo) / (32768 / (StackPanel_Graph.ActualHeight / 2));
-
-            Window_Main.Title = double_Level_Left.ToString("000.00") + " | " + double_Level_Right.ToString("000.00");
-
-            Audio_Peak_Left = new Line();
-            Audio_Peak_Left.Stroke = System.Windows.Media.Brushes.White;
-            Audio_Peak_Left.Fill = System.Windows.Media.Brushes.White;
-
-            Audio_Peak_Left.X1 = double_Position_Seconds * (StackPanel_Graph.ActualWidth / Slider_Control.Maximum);
-            Audio_Peak_Left.Y1 = StackPanel_Graph.ActualHeight / 2;
-
-            Audio_Peak_Left.X2 = Audio_Peak_Left.X1;
-            Audio_Peak_Left.Y2 = Audio_Peak_Left.Y1 - double_Level_Left;
-
-            Canvas_Lines.Children.Add(Audio_Peak_Left);
-
-            Audio_Peak_Right = new Line();
-            Audio_Peak_Right.Stroke = System.Windows.Media.Brushes.Red;
-            Audio_Peak_Right.Fill = System.Windows.Media.Brushes.Red;
-
-            Audio_Peak_Right.X1 = double_Position_Seconds * (StackPanel_Graph.ActualWidth / Slider_Control.Maximum);
-            Audio_Peak_Right.Y1 = StackPanel_Graph.ActualHeight / 2;
-
-            Audio_Peak_Right.X2 = Audio_Peak_Right.X1;
-            Audio_Peak_Right.Y2 = Audio_Peak_Right.Y1 + double_Level_Right;
-
-            Canvas_Lines.Children.Add(Audio_Peak_Right);
-        }
-
         private void Audio_Graph()
         {
             int stream;
             int NumFrames;
-            int Error;
-
+ 
             List<double> leftLevelList;
             List<double> rightLevelList;
 
@@ -249,8 +209,6 @@ namespace QAMP
 
             for (int i = 0; i < NumFrames; i++)
             {
-                // Get left and right levels.
-
                 int_Level_Stereo = Bass.BASS_ChannelGetLevel(stream);
 
                 if (int_Level_Stereo == -1)
@@ -259,9 +217,7 @@ namespace QAMP
                 }
                 double double_Level_Left = Utils.HighWord32(int_Level_Stereo) / (32768 / (StackPanel_Graph.ActualHeight / 2));
                 double double_Level_Right = Utils.LowWord32(int_Level_Stereo) / (32768 / (StackPanel_Graph.ActualHeight / 2));
-                //MessageBox.Show(double_Level_Left.ToString());
 
-                // Update left and right levels.
                 leftLevelList.Add(double_Level_Left);
                 rightLevelList.Add(double_Level_Right);
 
@@ -269,7 +225,6 @@ namespace QAMP
                 Audio_Peak_Left.Stroke = System.Windows.Media.Brushes.White;
                 Audio_Peak_Left.Fill = System.Windows.Media.Brushes.White;
 
-                //(StackPanel_Graph.ActualHeight - 8) / NumFrames
                 Audio_Peak_Left.X1 = (i * (StackPanel_Graph.ActualWidth - 8) / NumFrames) - 4;
                 Audio_Peak_Left.Y1 = StackPanel_Graph.ActualHeight / 2;
 
@@ -289,11 +244,7 @@ namespace QAMP
                 Audio_Peak_Right.Y2 = Audio_Peak_Right.Y1 + double_Level_Right;
 
                 Canvas_Lines.Children.Add(Audio_Peak_Right);
-
-
-
             }
-            //Window_Main.Title = leftLevelList.Count.ToString("000.00") + " | " + rightLevelList.Count.ToString("000.00");
         }
 
         private void Timer_Tick(object Sender, EventArgs E)
@@ -334,17 +285,12 @@ namespace QAMP
 
                     Slider_Control.Clicked = false;
                     Slider_Control.Button = null;
-
-
                 }
 
                 long_Position_Bytes = Bass.BASS_ChannelGetPosition(int_Stream);
                 double_Position_Seconds = Bass.BASS_ChannelBytes2Seconds(int_Stream, long_Position_Bytes);
 
-                //Audio_Peak();
-
                 Slider_Control.UpdateValue(double_Position_Seconds);
-               
             }
         }
     }

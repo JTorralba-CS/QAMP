@@ -3,8 +3,7 @@
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-        xmlns:local="clr-namespace:QAMP"
-                mc:Ignorable="d" Width="800" Height="450" MinWidth="800" MinHeight="450" WindowStartupLocation="CenterScreen" ContentRendered="Handle_Window_Main_ContentRendered"  SizeChanged="Handle_Window_Main_SizeChanged" Closing="Handle_Window_Main_Closing" WindowState="Normal" MaxHeight="450">
+        xmlns:local="clr-namespace:QAMP" mc:Ignorable="d" Width="800" Height="450" MinWidth="800" MinHeight="450" WindowStartupLocation="CenterScreen" ContentRendered="Handle_Window_Main_ContentRendered"  SizeChanged="Handle_Window_Main_SizeChanged" Closing="Handle_Window_Main_Closing" WindowState="Normal" MaxHeight="450">
 
     <Window.Background>
         <LinearGradientBrush EndPoint="0.25,1" StartPoint="0.25,0">
@@ -49,11 +48,6 @@
             <Setter Property="Template">
                 <Setter.Value>
                     <ControlTemplate TargetType="Thumb">
-                        <!--<Ellipse Height="24" Width="24">
-                            <Ellipse.Fill>
-                                <ImageBrush ImageSource="Image\Stop.png"></ImageBrush>
-                            </Ellipse.Fill>
-                        </Ellipse>-->
                         <Ellipse Fill="LightBlue" Stroke="LightBlue" Height="{Binding ElementName=StackPanel_Graph,Path=ActualHeight}" Width="1"/>
                     </ControlTemplate>
                 </Setter.Value>
@@ -111,9 +105,6 @@
             </Button>
             <TextBlock Name="TextBlock_TimeCode" HorizontalAlignment="Center" VerticalAlignment="Center" Margin="4,0,4,1" >00:00:00</TextBlock>
             <TextBlock Name="TextBlock_DEBUG" HorizontalAlignment="Center" VerticalAlignment="Center" Margin="4,0,4,1" Visibility="Hidden" ></TextBlock>
-            <!--<TextBlock Name="TextBlock_Width" HorizontalAlignment="Center" VerticalAlignment="Center" Margin="4,0,0,1" Text="{Binding ElementName=StackPanel_Graph,Path=ActualWidth}"></TextBlock>
-            <TextBlock Name="TextBlock_X" HorizontalAlignment="Center" VerticalAlignment="Center" Margin="2,0,0,1" Text="X"></TextBlock>
-            <TextBlock Name="TextBlock_Height" HorizontalAlignment="Center" VerticalAlignment="Center" Margin="2,0,0,1" Text="{Binding ElementName=StackPanel_Graph,Path=ActualHeight}"></TextBlock>-->
         </StackPanel>
 
         <StackPanel Grid.Row="1" x:Name="StackPanel_Graph" Margin="4,8,4,0">
