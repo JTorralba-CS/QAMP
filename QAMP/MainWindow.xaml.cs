@@ -40,12 +40,6 @@ namespace QAMP
 
         private int int_Level_Stereo = 0;
 
-        private double double_Level_Left = 0;
-        private double double_Level_Right = 0;
-
-        private Line Audio_Peak_Left = null;
-        private Line Audio_Peak_Right = null;
-
         public MainWindow()
         {
             InitializeComponent();
@@ -87,7 +81,7 @@ namespace QAMP
 
                         Window_Main.Title = "Stream created.";
 
-                        Audio_Graph();
+                        Audio_Level();
 
                         Button_Play.RaiseEvent(new RoutedEventArgs(ButtonBase.ClickEvent));
                     }
@@ -104,7 +98,7 @@ namespace QAMP
             Canvas_Lines.Children.Clear();
             if (int_Stream != 0)
             {
-                Audio_Graph();
+                Audio_Level();
             }
         }
 
@@ -188,28 +182,52 @@ namespace QAMP
             Slider_Axis.Value = Slider_Control.Value;
         }
 
-        private void Audio_Graph()
+        private void Audio_Level()
         {
-            int stream;
+            int Stream;
             int NumFrames;
- 
-            List<double> leftLevelList;
-            List<double> rightLevelList;
 
-            leftLevelList = new List<double>();
-            rightLevelList = new List<double>();
+            Stream = Bass.BASS_StreamCreateFile(string_Media, 0, 0, BASSFlag.BASS_STREAM_DECODE | BASSFlag.BASS_SAMPLE_FLOAT | BASSFlag.BASS_STREAM_PRESCAN);
+            if (Stream == 0) throw new Exception(Bass.BASS_ErrorGetCode().ToString());
 
-            stream = Bass.BASS_StreamCreateFile(string_Media, 0, 0, BASSFlag.BASS_STREAM_DECODE | BASSFlag.BASS_SAMPLE_FLOAT | BASSFlag.BASS_STREAM_PRESCAN);
-            if (stream == 0) throw new Exception(Bass.BASS_ErrorGetCode().ToString());
+            long TrackLengthInBytes = Bass.BASS_ChannelGetLength(Stream);
+            long FrameLengthInBytes = Bass.BASS_ChannelSeconds2Bytes(Stream, 0.02D);
+            NumFrames = (int)Math.Round(1f * TrackLengthInBytes / FrameLengthInBytes);
 
-            // Set number of frames.
-            long trackLengthInBytes = Bass.BASS_ChannelGetLength(stream);
-            long frameLengthInBytes = Bass.BASS_ChannelSeconds2Bytes(stream, 0.02D);
-            NumFrames = (int)Math.Round(1f * trackLengthInBytes / frameLengthInBytes);
+            SolidColorBrush LeftFill = new SolidColorBrush();
+            LeftFill.Color = Colors.White;
+
+            SolidColorBrush LeftOutline = new SolidColorBrush();
+            LeftOutline.Color = Colors.LightGray;
+
+            Polyline LeftPolyLine = new Polyline();
+            LeftPolyLine.StrokeThickness = 1;
+            LeftPolyLine.Fill = LeftFill;
+            LeftPolyLine.StrokeLineJoin = PenLineJoin.Round;
+            LeftPolyLine.Opacity = .75;
+
+            PointCollection LeftPolyPoints = new PointCollection();
+
+            SolidColorBrush RightFill = new SolidColorBrush();
+            RightFill.Color = Colors.Red;
+
+            SolidColorBrush RightOutline = new SolidColorBrush();
+            RightOutline.Color = Colors.LightGray;
+
+            Polyline RightPolyLine = new Polyline();
+            RightPolyLine.StrokeThickness = 1;
+            RightPolyLine.Fill = RightFill;
+            RightPolyLine.StrokeLineJoin = PenLineJoin.Round;
+            RightPolyLine.Opacity = .75;
+
+            PointCollection RightPolyPoints = new PointCollection();
+
+            LeftPolyPoints.Add(new System.Windows.Point((0 * (StackPanel_Graph.ActualWidth - 8) / NumFrames) - 4, StackPanel_Graph.ActualHeight / 2));
+            RightPolyPoints.Add(new System.Windows.Point((0 * (StackPanel_Graph.ActualWidth - 8) / NumFrames) - 4, StackPanel_Graph.ActualHeight / 2));
 
             for (int i = 0; i < NumFrames; i++)
             {
-                int_Level_Stereo = Bass.BASS_ChannelGetLevel(stream);
+                int_Level_Stereo = Bass.BASS_ChannelGetLevel(Stream);
 
                 if (int_Level_Stereo == -1)
                 {
@@ -218,33 +236,18 @@ namespace QAMP
                 double double_Level_Left = Utils.HighWord32(int_Level_Stereo) / (32768 / (StackPanel_Graph.ActualHeight / 2));
                 double double_Level_Right = Utils.LowWord32(int_Level_Stereo) / (32768 / (StackPanel_Graph.ActualHeight / 2));
 
-                leftLevelList.Add(double_Level_Left);
-                rightLevelList.Add(double_Level_Right);
+                LeftPolyPoints.Add(new System.Windows.Point((i * (StackPanel_Graph.ActualWidth - 8) / NumFrames) - 4, StackPanel_Graph.ActualHeight / 2 - double_Level_Left));
 
-                Audio_Peak_Left = new Line();
-                Audio_Peak_Left.Stroke = System.Windows.Media.Brushes.White;
-                Audio_Peak_Left.Fill = System.Windows.Media.Brushes.White;
-
-                Audio_Peak_Left.X1 = (i * (StackPanel_Graph.ActualWidth - 8) / NumFrames) - 4;
-                Audio_Peak_Left.Y1 = StackPanel_Graph.ActualHeight / 2;
-
-                Audio_Peak_Left.X2 = Audio_Peak_Left.X1;
-                Audio_Peak_Left.Y2 = Audio_Peak_Left.Y1 - double_Level_Left;
-
-                Canvas_Lines.Children.Add(Audio_Peak_Left);
-
-                Audio_Peak_Right = new Line();
-                Audio_Peak_Right.Stroke = System.Windows.Media.Brushes.Red;
-                Audio_Peak_Right.Fill = System.Windows.Media.Brushes.Red;
-
-                Audio_Peak_Right.X1 = (i * (StackPanel_Graph.ActualWidth - 8) / NumFrames) - 4;
-                Audio_Peak_Right.Y1 = StackPanel_Graph.ActualHeight / 2;
-
-                Audio_Peak_Right.X2 = Audio_Peak_Right.X1;
-                Audio_Peak_Right.Y2 = Audio_Peak_Right.Y1 + double_Level_Right;
-
-                Canvas_Lines.Children.Add(Audio_Peak_Right);
+                RightPolyPoints.Add(new System.Windows.Point((i * (StackPanel_Graph.ActualWidth - 8) / NumFrames) - 4, StackPanel_Graph.ActualHeight / 2 + double_Level_Left));
             }
+
+            RightPolyPoints.Add(new System.Windows.Point((NumFrames * (StackPanel_Graph.ActualWidth - 8) / NumFrames) - 4, StackPanel_Graph.ActualHeight / 2));
+            RightPolyLine.Points = RightPolyPoints;
+            Canvas_Lines.Children.Add(RightPolyLine);
+
+            LeftPolyPoints.Add(new System.Windows.Point((NumFrames * (StackPanel_Graph.ActualWidth - 8) / NumFrames) - 4, StackPanel_Graph.ActualHeight / 2));
+            LeftPolyLine.Points = LeftPolyPoints;
+            Canvas_Lines.Children.Add(LeftPolyLine);
         }
 
         private void Timer_Tick(object Sender, EventArgs E)
